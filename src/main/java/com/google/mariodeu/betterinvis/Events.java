@@ -75,7 +75,7 @@ public class Events implements Listener {
 
                 if (effect.get() != null) {
 
-                    ItemStack item = new ItemStack(Material.POTION);
+                    ItemStack item = new ItemStack(Material.POTION, 1);
                     ItemMeta itemMeta = item.getItemMeta();
 
                     ((PotionMeta) itemMeta).addCustomEffect(
