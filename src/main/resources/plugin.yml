@@ -1,0 +1,6 @@
+name: BetterInvis
+version: '${project.version}'
+main: com.google.mariodeu.betterinvis.Betterinvis
+api-version: 1.17
+authors: [ DimCo ]
+description: Better Minecraft invisibility effect
