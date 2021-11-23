@@ -1,6 +1,7 @@
 package com.google.mariodeu.betterinvis;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -62,9 +63,6 @@ public class Events implements Listener {
                 // Damage player
                 ((Player) entity).damage(0.1, e.getPlayer());
 
-                // Remove invisibility
-                ((Player) entity).removePotionEffect(PotionEffectType.INVISIBILITY);
-
                 AtomicReference<PotionEffect> effect = new AtomicReference<>();
 
                 ((Player) entity).getActivePotionEffects().forEach((potionEffect -> {
@@ -73,24 +71,32 @@ public class Events implements Listener {
                     }
                 }));
 
+                // Remove invisibility
+                ((Player) entity).removePotionEffect(PotionEffectType.INVISIBILITY);
+
+
+
+
+
                 if (effect.get() != null) {
+
+                    if (effect.get().getDuration() - 250 <= 0) {
+                        return;
+                    }
 
                     ItemStack item = new ItemStack(Material.POTION, 1);
                     ItemMeta itemMeta = item.getItemMeta();
 
-                    ((PotionMeta) itemMeta).addCustomEffect(
-                            PotionEffectType.INVISIBILITY.createEffect(
-                                    effect.get().getDuration(),
-                                    effect.get().getAmplifier()
-                            ), true);
+
+                    PotionEffect eff = new PotionEffect(PotionEffectType.INVISIBILITY, effect.get().getDuration() - 250, effect.get().getAmplifier(), true, true, true);
+
+                    ((PotionMeta) itemMeta).addCustomEffect(eff, true);
 
                     ((PotionMeta) itemMeta).setColor(PotionEffectType.INVISIBILITY.getColor());
 
                     item.setItemMeta(itemMeta);
 
-                    if (((Player) entity).getInventory().contains(Material.GLASS_BOTTLE)) {
-                        ((Player) entity).getInventory().addItem(item);
-                    }
+                    ((Player) entity).getInventory().addItem(item);
                 }
             }
         }
