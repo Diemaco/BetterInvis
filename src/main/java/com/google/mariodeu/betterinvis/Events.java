@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -56,9 +57,7 @@ public class Events implements Listener {
         if (entity instanceof Player) {
             if (!e.getPlayer().canSee((Player) entity)) {
                 // Show the player to everyone
-                Bukkit.getOnlinePlayers().forEach((player -> {
-                        player.showPlayer(plugin, e.getPlayer());
-                    }));
+                Bukkit.getOnlinePlayers().forEach((player -> player.showPlayer(plugin, e.getPlayer())));
 
                 // Damage player
                 ((Player) entity).damage(0.1, e.getPlayer());
@@ -73,10 +72,6 @@ public class Events implements Listener {
 
                 // Remove invisibility
                 ((Player) entity).removePotionEffect(PotionEffectType.INVISIBILITY);
-
-
-
-
 
                 if (effect.get() != null) {
 
@@ -98,6 +93,21 @@ public class Events implements Listener {
 
                     ((Player) entity).getInventory().addItem(item);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        JavaPlugin plugin = Betterinvis.getPlugin(Betterinvis.class);
+
+        if (e.getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+            Bukkit.getOnlinePlayers().forEach((player -> player.hidePlayer(plugin, e.getPlayer())));
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                e.getPlayer().hidePlayer(plugin, player);
             }
         }
     }
